@@ -3,7 +3,7 @@ import json
 from pymongo import MongoClient
 from typing import List, Dict
 
-from pipeline.crawler.aesop import AesopSpider
+from crawler.aesop import AesopSpider
 
 
 def main(spider: str, database_config: Dict[str, str]) -> int:

@@ -13,7 +13,7 @@ class AesopSpider(Spider):
         super().__init__()
         self.base_url = base_url
 
-    def _get_all_stories_link() -> Generator[str, None, None]:
+    def _get_all_stories_link(self) -> Generator[str, None, None]:
         """
         Returns a generator for links to all stories
         """
@@ -23,18 +23,19 @@ class AesopSpider(Spider):
         stories_link = soup.select('ul.toc>li>a')
 
         for a in stories_link:
-            yield base_url + a['href']
+            yield self.base_url + a['href']
 
-    def crawl(collection: pymongo.collection) -> int:
+    def crawl(self, collection: pymongo.collection) -> int:
         """
         Crawl logic for spider
         """
-        stories_link = _get_all_stories_link()
-
+        stories_link = self._get_all_stories_link()
         for idx, link in enumerate(tqdm(stories_link)):
             response = requests.get(link)
             
-            story = _parse(response)
+            story = self._parse(response)
+
+            story['link'] = link
             
             collection.insert_one(story)
                 
@@ -56,7 +57,6 @@ class AesopSpider(Spider):
         quote_text = [quote.text for quote in soup.select('blockquote')]
 
         story = {
-            'link': link,
             'html': response.content,
             'story': story_text,
             'quote': quote_text
