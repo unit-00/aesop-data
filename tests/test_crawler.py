@@ -26,7 +26,7 @@ class TestAesopSpider(unittest.TestCase):
 
     def test_crawl(self):
         self.test_spider.crawl(self.coll)
-        self.assertEqual(self.coll.count(), 2)
+        self.assertEqual(self.coll.count_documents({}), 2)
 
     @classmethod
     def tearDownClass(cls):
