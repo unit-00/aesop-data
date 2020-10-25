@@ -1,4 +1,4 @@
-from typing import Dict, Generator
+from typing import List, Dict, Generator
 import pymongo
 from tqdm import tqdm
 
@@ -9,31 +9,18 @@ import requests
 import time
 
 class AesopSpider(Spider):
-    def __init__(self, base_url):
+    def __init__(self, links: List[str]):
         super().__init__()
-        self.base_url = base_url
-
-    def _get_all_stories_link(self) -> Generator[str, None, None]:
-        """
-        Returns a generator for links to all stories
-        """
-        response = requests.get(self.base_url + '001.html')
-
-        soup = BeautifulSoup(response.content, 'html.parser')
-        stories_link = soup.select('ul.toc>li>a')
-
-        for a in stories_link:
-            yield self.base_url + a['href']
+        self.links = links
 
     def crawl(self, collection: pymongo.collection) -> int:
         """
         Crawl logic for spider
         """
-        stories_link = self._get_all_stories_link()
-        for idx, link in enumerate(tqdm(stories_link)):
+        for idx, link in enumerate(tqdm(self.links)):
             response = requests.get(link)
             
-            story = self._parse(response)
+            story = self._parse(response.content)
 
             story['link'] = link
             
@@ -48,18 +35,29 @@ class AesopSpider(Spider):
 
         return 0
 
-    def _parse(self, response: requests.models.Response) -> Dict:
+    def _parse(self, content: bytes) -> Dict:
         """
         Parse logic for crawled text
         """
-        soup = BeautifulSoup(response.content, 'html.parser')
+        soup = BeautifulSoup(content, 'html.parser')
         story_text = [p.text for p in soup.select('p')]
         quote_text = [quote.text for quote in soup.select('blockquote')]
 
         story = {
-            'html': response.content,
+            'html': content,
             'story': story_text,
             'quote': quote_text
         }
 
         return story
+
+def get_aesop_links(base_url: str) -> List[str]:
+    """
+    Returns a generator for links to all stories
+    """
+    response = requests.get(base_url + '001.html')
+
+    soup = BeautifulSoup(response.content, 'html.parser')
+    stories_link = soup.select('ul.toc>li>a')
+
+    return [base_url + a['href'] for a in stories_link]

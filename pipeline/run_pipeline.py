@@ -3,8 +3,7 @@ import json
 from pymongo import MongoClient
 from typing import List, Dict
 
-from crawler.aesop import AesopSpider
-
+from crawler.aesop import get_aesop_links, AesopSpider
 
 def main(spider: str, database_config: Dict[str, str]) -> int:
     """Crawl for data"""
@@ -19,7 +18,8 @@ def main(spider: str, database_config: Dict[str, str]) -> int:
 
         if spider == 'aesop':
             base_url = 'http://read.gov/aesop/'
-            aesop_spider = AesopSpider(base_url)
+            links = get_aesop_links(base_url)
+            aesop_spider = AesopSpider(links)
             aesop_spider.crawl(coll)
 
     return 0
@@ -34,7 +34,7 @@ def _parse_args():
         "host": "localhost", 
         "port": 27017, 
         "database": "story", 
-        "collection": "aesop"
+        "collection": "test_coll"
     }'
     """, required=True
     )
