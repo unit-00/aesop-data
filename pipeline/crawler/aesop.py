@@ -19,13 +19,13 @@ class AesopSpider(Spider):
         """
         for idx, link in enumerate(tqdm(self.links)):
             response = requests.get(link)
-            
+
             story = self._parse(response.content)
 
             story['link'] = link
-            
+
             collection.insert_one(story)
-                
+
             print('\nSleep 3 seconds')
             time.sleep(3)
 
@@ -53,7 +53,7 @@ class AesopSpider(Spider):
 
 def get_aesop_links(base_url: str) -> List[str]:
     """
-    Returns a generator for links to all stories
+    Returns links to all stories
     """
     response = requests.get(base_url + '001.html')
 
