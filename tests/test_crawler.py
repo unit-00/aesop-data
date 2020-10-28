@@ -1,10 +1,11 @@
 """Tests for Aesop spider"""
-import unittest # pylint: disable=missing-module-docstring
+import unittest  # pylint: disable=missing-module-docstring
 
 from pymongo import MongoClient
 import requests
 
-from crawler.aesop import get_aesop_links, AesopSpider # pylint: disable=import-error
+from crawler.aesop import get_aesop_links, AesopSpider
+
 
 class TestAesopSpider(unittest.TestCase):
     """Test cases for Aesop spider"""
@@ -28,7 +29,8 @@ class TestAesopSpider(unittest.TestCase):
         """Check if parse method is parsing properly"""
         test_story = self.links[0]
         response = requests.get(test_story)
-        self.assertTrue(isinstance(self.test_spider._parse(response.content), dict)) # pylint: disable=protected-access
+        self.assertTrue(isinstance(self.test_spider._parse(response.content),
+                        dict))  # pylint: disable=protected-access
 
     def test_crawl(self):
         """Check if crawl is able to insert documents into mongo server"""
@@ -38,6 +40,7 @@ class TestAesopSpider(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.client.drop_database(cls.test_db)
+
 
 if __name__ == '__main__':
     unittest.main()

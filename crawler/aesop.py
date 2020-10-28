@@ -1,7 +1,7 @@
 """
 Spider to crawl for Aesop stories
 """
-import time # pylint: disable=missing-module-docstring
+import time  # pylint: disable=missing-module-docstring
 from typing import List, Dict
 
 from bs4 import BeautifulSoup
@@ -12,8 +12,7 @@ from tqdm import tqdm
 from .spider import Spider
 
 
-
-class AesopSpider(Spider): # pylint: disable=too-few-public-methods
+class AesopSpider(Spider):  # pylint: disable=too-few-public-methods
     """
     Aesop Spider crawls through Library of Congress for aesop fables,
     storing html page, text, and interpretation of morales.
@@ -22,7 +21,7 @@ class AesopSpider(Spider): # pylint: disable=too-few-public-methods
         super().__init__()
         self.links = links
 
-    def crawl(self, collection: pymongo.collection) -> int: # pylint: disable=arguments-differ
+    def crawl(self, collection: pymongo.collection) -> int:  # pylint: disable=arguments-differ
         """
         Crawl logic for spider
         """
@@ -44,7 +43,7 @@ class AesopSpider(Spider): # pylint: disable=too-few-public-methods
 
         return 0
 
-    def _parse(self, content: bytes) -> Dict: # pylint: disable=arguments-differ
+    def _parse(self, content: bytes) -> Dict:  # pylint: disable=arguments-differ
         """
         Parse logic for crawled text
         """
@@ -59,6 +58,7 @@ class AesopSpider(Spider): # pylint: disable=too-few-public-methods
         }
 
         return story
+
 
 def get_aesop_links(base_url: str) -> List[str]:
     """

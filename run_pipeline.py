@@ -1,11 +1,12 @@
 """Script for running pipelines"""
 import argparse
 import json
-from typing import  Dict
+from typing import Dict
 
 from pymongo import MongoClient
 
 from crawler.aesop import get_aesop_links, AesopSpider
+
 
 def main(spider: str, db_config: Dict[str, str]) -> int:
     """Crawl for data"""
@@ -26,24 +27,31 @@ def main(spider: str, db_config: Dict[str, str]) -> int:
 
     return 0
 
+
 def _parse_args():
     """Parse commandline arguments"""
     parser = argparse.ArgumentParser()
-    parser.add_argument("--spider", type=str, default="aesop", help="Spiders to use")
-    parser.add_argument("--db_config", type=str, help="""
-    Mongo Database info JSON:
-    '{
-        "host": "localhost", 
-        "port": 27017, 
-        "database": "story", 
-        "collection": "test_coll"
-    }'
-    """, required=True
-    )
+    parser.add_argument("--spider",
+                        type=str,
+                        default="aesop",
+                        help="Spiders to use")
+    parser.add_argument("--db_config",
+                        type=str,
+                        help="""
+                        Mongo Database info JSON:
+                        '{
+                            "host": "localhost",
+                            "port": 27017,
+                            "database": "story",
+                            "collection": "test_coll"
+                        }'
+                        """, required=True
+                        )
 
     args_parser = parser.parse_args()
 
     return args_parser
+
 
 if __name__ == '__main__':
     args = _parse_args()
