@@ -1,17 +1,19 @@
+"""Script for running pipelines"""
 import argparse
 import json
+from typing import  Dict
+
 from pymongo import MongoClient
-from typing import List, Dict
 
 from crawler.aesop import get_aesop_links, AesopSpider
 
-def main(spider: str, database_config: Dict[str, str]) -> int:
+def main(spider: str, db_config: Dict[str, str]) -> int:
     """Crawl for data"""
 
-    host = database_config['host']
-    port = database_config['port']
-    database = database_config['database']
-    collection = database_config['collection']
+    host = db_config['host']
+    port = db_config['port']
+    database = db_config['database']
+    collection = db_config['collection']
 
     with MongoClient(host, port, serverSelectionTimeoutMS=10000) as client:
         coll = client[database][collection]
@@ -19,8 +21,8 @@ def main(spider: str, database_config: Dict[str, str]) -> int:
         if spider == 'aesop':
             base_url = 'http://read.gov/aesop/'
             links = get_aesop_links(base_url)
-            aesop_spider = AesopSpider(links)
-            aesop_spider.crawl(coll)
+            aesop_spider = AesopSpider(links=links)
+            aesop_spider.crawl(collection=coll)
 
     return 0
 
@@ -39,9 +41,9 @@ def _parse_args():
     """, required=True
     )
 
-    args = parser.parse_args()
+    args_parser = parser.parse_args()
 
-    return args
+    return args_parser
 
 if __name__ == '__main__':
     args = _parse_args()
