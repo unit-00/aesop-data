@@ -1,8 +1,8 @@
-"""Abstract Spider class to be extended"""
+"""Spider class to be extended"""
 
 
 class Spider:  # pylint: disable=too-few-public-methods
-    """Simple Spider class for crawling"""
+    """Abstract Spider class for crawling"""
     def __init__(self):
         self.base_url = None
 
